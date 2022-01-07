@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>earthquake-API</title>
+        <meta http-equiv='Content-Type' content='text/html; charset=utf-8'/>
+        <style type='text/css'>body{margin:0;padding:0;overflow:hidden;font-family:'Segoe UI',Helvetica,Arial,Sans-Serif}</style>
+    </head>
+    <body>
+        <div id='printoutPanel'></div>
+        
+        <div id='myMap' style='width: 100vw; height: 100vh;'></div>
+        <script type='text/javascript' src='https://www.bing.com/api/maps/mapcontrol?key=[*****]&callback=loadMapScenario&language=ja' async defer></script>
+        <script src="js/earthquake.js"></script>
+        <script type='text/javascript'>
+            function loadMapScenario() {
+                var map = new Microsoft.Maps.Map(document.getElementById('myMap'), {
+                    /* No need to set credentials if already passed in URL */
+                    center: new Microsoft.Maps.Location(39.393486, -98.100769),
+                    zoom: 3
+                });
+                //Load the GeoJSON and HeatMap modules
+                Microsoft.Maps.loadModule(['Microsoft.Maps.GeoJson', 'Microsoft.Maps.HeatMap'], function () {
+                    // earthquake data in the past 30 days from usgs.gov
+                    Microsoft.Maps.GeoJson.readFromUrl('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson&language=ja', function (shapes) {
+                        var heatMap = new Microsoft.Maps.HeatMapLayer(shapes, { radius: 5, propertyAsWeight: 'mag' });
+                        map.layers.insert(heatMap);
+                    });
+                });
+                
+            }
+        </script>
+        
+    </body>
+</html>
